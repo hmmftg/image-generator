@@ -27,8 +27,8 @@ var (
 	text2X = flag.Int("text2X", borderSpace*2, "textX")
 	text2Y = flag.Int("text2Y", 300, "texty")
 
-	text1 = string("سلام نوشته")
-	text2 = string("سلام نوشته")
+	text1 = string("سلام نوشته 11111 ۱۱۱۱")
+	text2 = string("سلام نوشته 11111 ۱۱۱۱")
 )
 
 func main() {
@@ -61,6 +61,14 @@ func main() {
 				Y:          *text2Y,
 				RightAlign: true,
 				FontFace:   faceName,
+			},
+			ig.Text{
+				Text:            text2,
+				X:               *text2X + borderSpace,
+				Y:               *text2Y + borderSpace,
+				RightAlign:      true,
+				NumbersToArabic: true,
+				FontFace:        faceName,
 			},
 			ig.Rect{
 				Thickness: 2,

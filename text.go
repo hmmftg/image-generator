@@ -13,10 +13,11 @@ import (
 )
 
 type Text struct {
-	Text       string
-	X, Y       int
-	RightAlign bool
-	FontFace   string
+	Text            string
+	X, Y            int
+	RightAlign      bool
+	NumbersToArabic bool
+	FontFace        string
 }
 
 func (s Text) CheckFace(tx *PrintTx) font.Face {
@@ -49,6 +50,10 @@ func (s Text) Font(dpi float64) string {
 
 func (s Text) Draw(tx *PrintTx) int {
 	s.Text = garabic.Shape(s.Text)
+	if s.NumbersToArabic {
+		s.Text = garabic.ToArabicDigits(s.Text)
+	}
+
 	face := s.CheckFace(tx)
 	if face == nil {
 		log.Printf("face not detected")
