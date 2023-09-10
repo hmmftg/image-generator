@@ -20,7 +20,8 @@ const borderSpace = 10
 
 var (
 	dpi        = flag.Float64("dpi", 300, "screen resolution in Dots Per Inch")
-	fontFolder = flag.String("fonts", "./example/", "filename of the ttf font")
+	basePath   = flag.String("base", "..", "filename of the ttf font")
+	fontFolder = flag.String("fonts", "fonts", "name of the ttfs folder")
 	fontfile   = flag.String("fontfile", "arial.ttf", "filename of the ttf font")
 	hinting    = flag.String("hinting", "full", "none | full")
 	size       = flag.Float64("size", 20, "font size in points")
@@ -35,14 +36,14 @@ var (
 	text2 = string("سلام نوشته")
 )
 
-func drawBorder(rgba *image.RGBA, thickness int) {
-	ig.Rect{BackGround: rgba, Thickness: thickness, X1: borderSpace, Y1: borderSpace, X2: *imageX - borderSpace, Y2: *imageY - borderSpace, Color: ig.BlackRuler}.Draw()
+func drawBorder(tx *ig.PrintTx, thickness int) {
+	ig.Rect{Thickness: thickness, X1: borderSpace, Y1: borderSpace, X2: *imageX - borderSpace, Y2: *imageY - borderSpace, Color: ig.BlackRuler}.Draw(tx)
 }
 
 func main() {
 	flag.Parse()
-	fmt.Printf("Loading fontfile %q %q\n", *fontFolder, *fontfile)
-	b, err := os.ReadFile(*fontFolder + *fontfile)
+	fmt.Printf("Loading fontfile %q %q %q\n", *basePath, *fontFolder, *fontfile)
+	b, err := os.ReadFile(fmt.Sprintf("%s/%s/%s", *basePath, *fontFolder, *fontfile))
 	if err != nil {
 		log.Println(err)
 		return
@@ -63,24 +64,25 @@ func main() {
 	case "full":
 		opts.Hinting = font.HintingFull
 	}
+	fonts := map[string]opentype.Font{*fontfile: *f}
 	// Truetype stuff
 	face, err := opentype.NewFace(f, &opts)
 	if err != nil {
 		log.Fatal(err)
 	}
 	var faceName = fmt.Sprintf("%s:%f", *fontfile, *size)
-	fonts := map[string]font.Face{faceName: face}
+	faces := map[string]font.Face{faceName: face}
 	// Freetype context
 	fg, bg := image.Black, image.White
 	rgba := image.NewRGBA(image.Rect(0, 0, *imageX, *imageY))
 	draw.Draw(rgba, rgba.Bounds(), bg, image.Point{}, draw.Src)
 
-	tx := ig.PrintTx{Rgba: rgba, Bg: fg, Fonts: &fonts}
+	tx := ig.PrintTx{Rgba: rgba, Bg: fg, Faces: &faces, Dpi: *dpi, Fonts: fonts}
 
 	// Make some background
 
 	// Draw the guidelines.
-	drawBorder(rgba, 3)
+	drawBorder(&tx, 3)
 
 	ig.VLine(rgba, ig.GreenRuler, borderSpace*2, borderSpace*2, *imageY-250)
 	offset1 := ig.Text{FontFace: faceName, Text: text1, X: *text1X, Y: *text1Y, RightAlign: false}.Draw(&tx)

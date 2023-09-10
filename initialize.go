@@ -16,7 +16,7 @@ func exists(path string) bool {
 	return err == nil
 }
 
-func LoadFonts(src string) (map[string]*opentype.Font, error) {
+func LoadFonts(src string) (map[string]opentype.Font, error) {
 	if !exists(src) {
 		return nil, nil
 	}
@@ -24,7 +24,7 @@ func LoadFonts(src string) (map[string]*opentype.Font, error) {
 	if err != nil {
 		return nil, err
 	}
-	fonts := make(map[string]*opentype.Font, 0)
+	fonts := make(map[string]opentype.Font, 0)
 	for _, fontName := range fontList {
 		fontBytes, err := os.ReadFile(filepath.Join(src, fontName.Name()))
 		if err != nil {
@@ -34,7 +34,7 @@ func LoadFonts(src string) (map[string]*opentype.Font, error) {
 		if err != nil {
 			return nil, err
 		}
-		fonts[fontName.Name()] = f
+		fonts[fontName.Name()] = *f
 	}
 	return fonts, nil
 }

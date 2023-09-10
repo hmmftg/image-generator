@@ -36,13 +36,13 @@ var (
 )
 
 type Rect struct {
-	BackGround *image.RGBA
-	Thickness  int
-	X1, X2     int
-	Y1, Y2     int
-	Color      color.Color
+	Thickness int
+	X1, X2    int
+	Y1, Y2    int
+	Color     color.Color
 }
 
-func (r Rect) Draw() {
-	DrawRect(r.X1, r.Y1, r.X2, r.Y2, r.Thickness, r.BackGround, r.Color)
+func (r Rect) Draw(tx *PrintTx) int {
+	DrawRect(r.X1, r.Y1, r.X2, r.Y2, r.Thickness, tx.Rgba, r.Color)
+	return r.X2
 }
