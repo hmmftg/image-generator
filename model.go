@@ -14,6 +14,7 @@ type Drawable interface {
 type PrintRequest struct {
 	Drawings []Drawable
 	Images   []ImageData
+	Margin   float64
 }
 
 type PrintTx struct {
@@ -22,6 +23,7 @@ type PrintTx struct {
 	Fg     image.Image
 	Bg     *image.Uniform
 	Dpi    float64
+	Margin float64
 	Fonts  map[string]opentype.Font
 	Faces  *map[string]font.Face
 	Images map[string]image.Image

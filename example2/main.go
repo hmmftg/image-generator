@@ -8,7 +8,7 @@ import (
 	ig "github.com/hmmftg/image-generator"
 )
 
-const borderSpace = 10
+const borderSpace = 0.05
 
 var (
 	dpi1         = flag.Float64("dpi1", 72, "screen resolution in Dots Per Inch")
@@ -22,13 +22,13 @@ var (
 	size   = flag.Float64("size", 30, "font size in points")
 	imageX = flag.Int("imageX", 800, "imageX")
 	imageY = flag.Int("imageY", 800, "imageY")
-	text1X = flag.Int("text1X", borderSpace*2, "textX")
-	text1Y = flag.Int("text1Y", 100, "texty")
-	text2X = flag.Int("text2X", borderSpace*2, "textX")
-	text2Y = flag.Int("text2Y", 300, "texty")
+	text1X = flag.Float64("text1X", borderSpace*2, "textX")
+	text1Y = flag.Float64("text1Y", borderSpace*5, "texty")
+	text2X = flag.Float64("text2X", borderSpace*2, "textX")
+	text2Y = flag.Float64("text2Y", borderSpace*15, "texty")
 
 	text1 = string("سلام نوشته 11111 ۱۱۱۱")
-	text2 = string("سلام نوشته 11111 ۱۱۱۱")
+	text2 = string("سلام نوشته 11111 ۱۱۱۱ sd;alsd asd سشمیبسمیبنتمسشیبتکمشسینتبکمشت ینمشسیتب شسیتب شسنمیاب شسیاکبا شکسیاب کشسیابشکسایبا")
 )
 
 func main() {
@@ -47,6 +47,7 @@ func main() {
 	}
 
 	req := ig.PrintRequest{
+		Margin: borderSpace * 2,
 		Drawings: []ig.Drawable{
 			ig.Text{
 				Text:       text1,
@@ -70,26 +71,35 @@ func main() {
 				NumbersToArabic: true,
 				FontFace:        faceName,
 			},
+			ig.Text{
+				Text:       "l;asdj aklsdj ajsd lasjdl asjlkd asjd laksdljasl d lasjdl aslkdj lasjdl alsda",
+				X:          *text2X,
+				Y:          *text2Y + borderSpace*2,
+				RightAlign: false,
+				FontFace:   faceName,
+			},
 			ig.Rect{
 				Thickness: 2,
-				X1:        borderSpace - 2,
-				X2:        *imageX - borderSpace + 2,
-				Y1:        borderSpace - 2,
-				Y2:        *imageY - borderSpace + 2,
+				X1:        borderSpace,
+				X2:        1 - borderSpace,
+				Y1:        borderSpace,
+				Y2:        1 - borderSpace,
 				Color:     ig.GreenRuler,
 			},
 			ig.Rect{
 				Thickness: 2,
-				X1:        borderSpace + 2,
-				X2:        *imageX - borderSpace - 2,
-				Y1:        borderSpace + 2,
-				Y2:        *imageY - borderSpace - 2,
+				X1:        borderSpace * 2,
+				X2:        1 - (borderSpace * 2),
+				Y1:        borderSpace * 2,
+				Y2:        1 - (borderSpace * 2),
 				Color:     ig.RedRuler,
 			},
 			&ig.Image{
-				ID: "logo1.png",
-				X:  borderSpace + 20,
-				Y:  borderSpace + 20,
+				ID:         "logo1.png",
+				X:          borderSpace * 2,
+				Y:          borderSpace * 2,
+				RightAlign: true,
+				Scale:      0.3,
 			},
 		},
 		Images: []ig.ImageData{

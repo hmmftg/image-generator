@@ -14,7 +14,7 @@ import (
 
 type Text struct {
 	Text             string
-	X, Y             int
+	X, Y             float64
 	RightAlign       bool
 	NumbersToArabic  bool
 	NumbersToPersian bool
@@ -26,9 +26,10 @@ func (s Text) CheckFace(tx *PrintTx) font.Face {
 	if !ok {
 		faceName := s.Font(tx.Dpi)
 		if len(faceName) == 0 {
+			log.Println("invalid font face(text ignored)", s.FontFace, tx.Dpi)
 			return nil
 		}
-		fmt.Println("Adding font face:", faceName)
+		// fmt.Println("Adding font face:", faceName)
 		fn := strings.Split(faceName, ":")
 		sz, _ := strconv.ParseFloat(fn[1], 64)
 		opts := opentype.FaceOptions{
@@ -50,6 +51,7 @@ func (s Text) Font(dpi float64) string {
 }
 
 func (s Text) Draw(tx *PrintTx) int {
+	// log.Println("drawing", s)
 	s.Text = garabic.Shape(s.Text)
 	if s.NumbersToArabic {
 		s.Text = garabic.ToArabicDigits(s.Text)
@@ -60,27 +62,34 @@ func (s Text) Draw(tx *PrintTx) int {
 
 	face := s.CheckFace(tx)
 	if face == nil {
-		log.Printf("face not detected")
 		return 0
 	}
+	x := tx.GetRelationalX(s.X)
+	y := tx.GetRelationalY(s.Y)
 
 	d := &font.Drawer{
 		Dst:  tx.Rgba,
 		Src:  tx.Bg,
 		Face: face,
-		Dot:  fixed.P(s.X, s.Y),
+		Dot:  fixed.P(x, y),
 	}
-	len := d.MeasureString(s.Text)
-	advance := len.Round() + s.X
+	textLen := d.MeasureString(s.Text)
+	advance := textLen.Round() + x
+	for advance > tx.Rgba.Bounds().Max.X-tx.GetRelationalX(tx.Margin) {
+		if garabic.IsArabicLetter([]rune(s.Text)[0]) {
+			s.Text = s.Text[1:]
+		} else {
+			s.Text = s.Text[:len(s.Text)-1]
+		}
+		textLen = d.MeasureString(s.Text)
+		advance = textLen.Round() + x
+	}
 	if s.RightAlign {
-		d.Dot = fixed.P(tx.Rgba.Bounds().Max.X-len.Round()-s.X, s.Y)
-		advance = tx.Rgba.Bounds().Max.X - len.Round() - s.X
+		d.Dot = fixed.P(tx.Rgba.Bounds().Max.X-textLen.Round()-x, y)
+		advance = tx.Rgba.Bounds().Max.X - textLen.Round() - x
 	}
-	// fmt.Printf("Draw(%+v %T %+v)\n", s, *tx.Bg, d)
+	// log.Println("drawing", d.Dot)
 
 	d.DrawString(s.Text)
-
-	// writePngInFile(tx.Rgba, fmt.Sprintf("%s_%d_%d.png", s.Text, s.X, s.Y))
-
 	return advance
 }

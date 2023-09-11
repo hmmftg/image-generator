@@ -2,6 +2,7 @@ package imagegenerator
 
 import (
 	"image"
+	"math"
 
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
@@ -11,6 +12,18 @@ const (
 	BmpAndPng = "bmp+png"
 	JustPng   = "png"
 )
+
+func GetRelational(r float64, v int) int {
+	return int(math.Round(r * float64(v)))
+}
+
+func (tx *PrintTx) GetRelationalX(rx float64) int {
+	return GetRelational(rx, tx.Rgba.Bounds().Dx())
+}
+
+func (tx *PrintTx) GetRelationalY(rx float64) int {
+	return GetRelational(rx, tx.Rgba.Bounds().Dy())
+}
 
 func ProcessRequest(
 	requests map[string]PrintRequest,
@@ -23,7 +36,13 @@ func ProcessRequest(
 	for name, request := range requests {
 		resp := make(map[string]string, 0)
 		for imageID := range request.Images {
-			tx := PrintTx{Faces: &faces, Dpi: request.Images[imageID].Dpi, Images: images, Fonts: fonts}
+			tx := PrintTx{
+				Faces:  &faces,
+				Dpi:    request.Images[imageID].Dpi,
+				Images: images,
+				Fonts:  fonts,
+				Margin: request.Margin,
+			}
 			if len(request.Images[imageID].BackgroundFile) > 0 {
 				tx.Bg = image.Transparent
 				tx.Src = images[request.Images[imageID].BackgroundFile]

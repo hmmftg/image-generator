@@ -135,7 +135,7 @@ func GetImage(img *ImageData, resp map[string]string, rgba *image.RGBA) error {
 
 func (img ImageData) InitializeImage(bgMap map[string]image.Image, tx *PrintTx,
 ) {
-	tx.Rgba = image.NewRGBA(image.Rect(0, 0, img.Width, img.Height))
+	tx.Rgba = image.NewRGBA(image.Rect(0, 0, img.Width*(int(img.Dpi/72.)), img.Height*(int(img.Dpi/72.))))
 	if tx.Src != nil {
 		draw.Draw(tx.Rgba, tx.Rgba.Bounds(), tx.Src, image.Point{}, draw.Over)
 	} else {

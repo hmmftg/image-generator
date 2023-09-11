@@ -3,6 +3,8 @@ package imagegenerator
 import (
 	"image"
 	"image/color"
+
+	"github.com/StephaneBunel/bresenham"
 )
 
 // HLine draws a horizontal line
@@ -37,12 +39,35 @@ var (
 
 type Rect struct {
 	Thickness int
-	X1, X2    int
-	Y1, Y2    int
+	X1, X2    float64
+	Y1, Y2    float64
 	Color     color.Color
 }
 
 func (r Rect) Draw(tx *PrintTx) int {
-	DrawRect(r.X1, r.Y1, r.X2, r.Y2, r.Thickness, tx.Rgba, r.Color)
-	return r.X2
+	DrawRect(tx.GetRelationalX(r.X1), tx.GetRelationalY(r.Y1), tx.GetRelationalX(r.X2), tx.GetRelationalY(r.Y2), r.Thickness*(int(tx.Dpi/72.)), tx.Rgba, r.Color)
+	return tx.GetRelationalX(r.X2)
+}
+
+type Line struct {
+	X1, X2    float64
+	Y1, Y2    float64
+	Thickness int
+	Color     color.Color
+}
+
+func (l Line) Draw(tx *PrintTx) int {
+	x1, y1, x2, y2 := tx.GetRelationalX(l.X1), tx.GetRelationalY(l.Y1), tx.GetRelationalX(l.X2), tx.GetRelationalY(l.Y2)
+	for i := 0; i < l.Thickness; i++ {
+		bresenham.DrawLine(tx.Rgba, x1, y1, x2, y2, l.Color)
+		if x1 != x2 {
+			x1 = x1 - 1
+			x2 = x2 - 1
+		}
+		if y1 != y2 {
+			y1 = y1 - 1
+			y2 = y2 - 1
+		}
+	}
+	return x2
 }
