@@ -7,8 +7,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"golang.org/x/image/bmp"
-	"golang.org/x/image/font/opentype"
+	"github.com/hmmftg/image/bmp"
+	"github.com/hmmftg/image/font/opentype"
 )
 
 func exists(path string) bool {

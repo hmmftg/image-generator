@@ -10,7 +10,7 @@ import (
 	"image/png"
 	"os"
 
-	"golang.org/x/image/bmp"
+	"github.com/hmmftg/image/bmp"
 )
 
 type ImageData struct {

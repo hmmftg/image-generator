@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/hmmftg/garabic"
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
-	"golang.org/x/image/math/fixed"
+	"github.com/hmmftg/image/font"
+	"github.com/hmmftg/image/font/opentype"
+	"github.com/hmmftg/image/math/fixed"
 )
 
 type Text struct {

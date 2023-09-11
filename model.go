@@ -3,8 +3,8 @@ package imagegenerator
 import (
 	"image"
 
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
+	"github.com/hmmftg/image/font"
+	"github.com/hmmftg/image/font/opentype"
 )
 
 type Drawable interface {

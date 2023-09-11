@@ -6,7 +6,7 @@ import (
 	//"image/draw"
 	"log"
 
-	"golang.org/x/image/draw"
+	"github.com/hmmftg/image/draw"
 )
 
 type Image struct {

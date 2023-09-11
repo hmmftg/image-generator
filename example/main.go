@@ -12,8 +12,8 @@ import (
 
 	ig "github.com/hmmftg/image-generator"
 
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
+	"github.com/hmmftg/image/font"
+	"github.com/hmmftg/image/font/opentype"
 )
 
 const borderSpace = 0.05

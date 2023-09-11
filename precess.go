@@ -4,8 +4,8 @@ import (
 	"image"
 	"math"
 
-	"golang.org/x/image/font"
-	"golang.org/x/image/font/opentype"
+	"github.com/hmmftg/image/font"
+	"github.com/hmmftg/image/font/opentype"
 )
 
 const (
