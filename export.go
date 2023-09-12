@@ -6,11 +6,11 @@ import (
 	"compress/gzip"
 	"encoding/base64"
 	"image"
-	"image/draw"
 	"image/png"
 	"os"
 
 	"github.com/hmmftg/image/bmp"
+	"github.com/hmmftg/image/draw"
 )
 
 type ImageData struct {
@@ -135,9 +135,16 @@ func GetImage(img *ImageData, resp map[string]string, rgba *image.RGBA) error {
 
 func (img ImageData) InitializeImage(bgMap map[string]image.Image, tx *PrintTx,
 ) {
-	tx.Rgba = image.NewRGBA(image.Rect(0, 0, img.Width*(int(img.Dpi/72.)), img.Height*(int(img.Dpi/72.))))
+	rect := image.Rect(0, 0, img.Width*(int(img.Dpi/72.)), img.Height*(int(img.Dpi/72.)))
+	tx.Rgba = image.NewRGBA(rect)
 	if tx.Src != nil {
-		draw.Draw(tx.Rgba, tx.Rgba.Bounds(), tx.Src, image.Point{}, draw.Over)
+		if tx.Src.Bounds() != rect {
+			scaledImage := image.NewRGBA(rect)
+			draw.NearestNeighbor.Scale(scaledImage, rect, tx.Src, tx.Src.Bounds(), draw.Over, nil)
+			draw.Draw(tx.Rgba, tx.Rgba.Bounds(), scaledImage, image.Point{}, draw.Over)
+		} else {
+			draw.Draw(tx.Rgba, tx.Rgba.Bounds(), tx.Src, image.Point{}, draw.Over)
+		}
 	} else {
 		draw.Draw(tx.Rgba, tx.Rgba.Bounds(), tx.Bg, image.Point{}, draw.Src)
 	}
