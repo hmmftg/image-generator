@@ -61,6 +61,7 @@ func main() {
 				X:          *text2X,
 				Y:          *text2Y,
 				RightAlign: true,
+				MaxWidth:   0.9,
 				FontFace:   faceName,
 			},
 			ig.Text{
@@ -69,6 +70,7 @@ func main() {
 				Y:               *text2Y + borderSpace,
 				RightAlign:      true,
 				NumbersToArabic: true,
+				MaxWidth:        0.9,
 				FontFace:        faceName,
 			},
 			ig.Text{
@@ -76,6 +78,23 @@ func main() {
 				X:          *text2X,
 				Y:          *text2Y + borderSpace*2,
 				RightAlign: false,
+				MaxWidth:   0.6,
+				FontFace:   faceName,
+			},
+			ig.Text{
+				Text:       "l;asdj aklsdj ajsd lasjdl asjlkd asjd laksdljasl d lasjdl aslkdj lasjdl alsda",
+				X:          *text2X,
+				Y:          *text2Y + borderSpace*3,
+				RightAlign: false,
+				MaxWidth:   0.7,
+				FontFace:   faceName,
+			},
+			ig.Text{
+				Text:       "l;asdj aklsdj ajsd lasjdl asjlkd asjd laksdljasl d lasjdl aslkdj lasjdl alsda",
+				X:          *text2X,
+				Y:          *text2Y + borderSpace*4,
+				RightAlign: false,
+				MaxWidth:   0.8,
 				FontFace:   faceName,
 			},
 			ig.Rect{

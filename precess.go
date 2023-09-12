@@ -13,16 +13,28 @@ const (
 	JustPng   = "png"
 )
 
-func GetRelational(r float64, v int) int {
+func RelationalCoordinate(r float64, v int) int {
 	return int(math.Round(r * float64(v)))
 }
 
-func (tx *PrintTx) GetRelationalX(rx float64) int {
-	return GetRelational(rx, tx.Rgba.Bounds().Dx())
+func CoordinationToRelation(c, v int) float64 {
+	return float64(c) / float64(v)
 }
 
-func (tx *PrintTx) GetRelationalY(rx float64) int {
-	return GetRelational(rx, tx.Rgba.Bounds().Dy())
+func (tx *PrintTx) RelationalX(rx float64) int {
+	return RelationalCoordinate(rx, tx.Rgba.Bounds().Dx())
+}
+
+func (tx *PrintTx) CoordinationX(c int) float64 {
+	return CoordinationToRelation(c, tx.Rgba.Bounds().Dx())
+}
+
+func (tx *PrintTx) RelationalY(rx float64) int {
+	return RelationalCoordinate(rx, tx.Rgba.Bounds().Dy())
+}
+
+func (tx *PrintTx) CoordinationY(c int) float64 {
+	return CoordinationToRelation(c, tx.Rgba.Bounds().Dy())
 }
 
 func ProcessRequest(

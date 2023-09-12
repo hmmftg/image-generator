@@ -45,8 +45,8 @@ type Rect struct {
 }
 
 func (r Rect) Draw(tx *PrintTx) int {
-	DrawRect(tx.GetRelationalX(r.X1), tx.GetRelationalY(r.Y1), tx.GetRelationalX(r.X2), tx.GetRelationalY(r.Y2), r.Thickness*(int(tx.Dpi/72.)), tx.Rgba, r.Color)
-	return tx.GetRelationalX(r.X2)
+	DrawRect(tx.RelationalX(r.X1), tx.RelationalY(r.Y1), tx.RelationalX(r.X2), tx.RelationalY(r.Y2), r.Thickness*(int(tx.Dpi/72.)), tx.Rgba, r.Color)
+	return tx.RelationalX(r.X2)
 }
 
 type Line struct {
@@ -57,7 +57,7 @@ type Line struct {
 }
 
 func (l Line) Draw(tx *PrintTx) int {
-	x1, y1, x2, y2 := tx.GetRelationalX(l.X1), tx.GetRelationalY(l.Y1), tx.GetRelationalX(l.X2), tx.GetRelationalY(l.Y2)
+	x1, y1, x2, y2 := tx.RelationalX(l.X1), tx.RelationalY(l.Y1), tx.RelationalX(l.X2), tx.RelationalY(l.Y2)
 	for i := 0; i < l.Thickness; i++ {
 		bresenham.DrawLine(tx.Rgba, x1, y1, x2, y2, l.Color)
 		if x1 != x2 {

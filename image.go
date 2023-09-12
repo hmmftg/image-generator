@@ -44,13 +44,13 @@ func (i Image) Draw(tx *PrintTx) int {
 
 	draw.NearestNeighbor.Scale(scaledImage, scaledRect, i.Target, i.Target.Bounds(), draw.Over, nil)
 
-	x := tx.GetRelationalX(i.X)
+	x := tx.RelationalX(i.X)
 	if i.RightAlign {
 		x = tx.Rgba.Bounds().Max.X - scaledImage.Rect.Max.X - x
 	} else {
-		x = tx.GetRelationalX(i.X)
+		x = tx.RelationalX(i.X)
 	}
-	y := tx.GetRelationalY(i.Y)
+	y := tx.RelationalY(i.Y)
 
 	DrawImage(tx.Rgba, scaledImage, x, y)
 	return x
