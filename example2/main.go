@@ -29,6 +29,8 @@ var (
 
 	text1 = string("سلام نوشته 11111 ۱۱۱۱")
 	text2 = string("سلام نوشته 11111 ۱۱۱۱ sd;alsd asd سشمیبسمیبنتمسشیبتکمشسینتبکمشت ینمشسیتب شسیتب شسنمیاب شسیاکبا شکسیاب کشسیابشکسایبا")
+	text3 = string("145282220.25")
+	text4 = string("145282220.25")
 )
 
 func main() {
@@ -55,6 +57,22 @@ func main() {
 				Y:          *text1Y,
 				RightAlign: false,
 				FontFace:   faceName,
+			},
+			ig.Text{
+				Text:                 text3,
+				X:                    *text1X + 0.1,
+				Y:                    *text1Y + 0.1,
+				RightAlign:           false,
+				FontFace:             faceName,
+				NumberToPersianWords: true,
+			},
+			ig.Text{
+				Text:          text3,
+				X:             *text1X + 0.2,
+				Y:             *text1Y + 0.2,
+				RightAlign:    false,
+				FontFace:      faceName,
+				NumberToWords: true,
 			},
 			ig.Text{
 				Text:       text2,

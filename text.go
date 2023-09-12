@@ -10,17 +10,38 @@ import (
 	"github.com/hmmftg/image/font"
 	"github.com/hmmftg/image/font/opentype"
 	"github.com/hmmftg/image/math/fixed"
+	ntw "moul.io/number-to-words"
 )
 
 type Text struct {
-	Text             string
-	X                float64
-	Y                float64
-	MaxWidth         float64 // if result width is more than this value, library tries new font face with decreased size
-	RightAlign       bool
-	NumbersToArabic  bool
-	NumbersToPersian bool
-	FontFace         string
+	Text                 string
+	X                    float64
+	Y                    float64
+	MaxWidth             float64 // if result width is more than this value, library tries new font face with decreased size
+	RightAlign           bool
+	NumbersToArabic      bool
+	NumbersToPersian     bool
+	NumberToWords        bool
+	NumberToPersianWords bool
+	FontFace             string
+}
+
+func NumToPersianWords(number string) string {
+	result := ""
+	for _, digit := range number {
+		i, _ := strconv.Atoi(string(digit))
+		result += ntw.IntegerToIrIr(i) + " "
+	}
+	return result
+}
+
+func NumToWords(number string) string {
+	result := ""
+	for _, digit := range number {
+		i, _ := strconv.Atoi(string(digit))
+		result += ntw.IntegerToEnUs(i) + " "
+	}
+	return result
 }
 
 func (tx *PrintTx) AddFace(fontName string, sz float64) font.Face {
@@ -75,12 +96,18 @@ func (s Text) FontData() (string, float64) {
 func (s Text) Draw(tx *PrintTx) int {
 	// log.Println("drawing", s)
 	firstRune := []rune(s.Text)[0]
+	if s.NumberToPersianWords {
+		s.Text = NumToPersianWords(s.Text)
+	}
 	s.Text = garabic.Shape(s.Text)
 	if s.NumbersToArabic {
 		s.Text = garabic.ToArabicDigits(s.Text)
 	}
 	if s.NumbersToPersian {
 		s.Text = garabic.ToPersianDigits(s.Text)
+	}
+	if s.NumberToWords {
+		s.Text = NumToWords(s.Text)
 	}
 
 	face := s.CheckFace(tx)
