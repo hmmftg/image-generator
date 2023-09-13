@@ -135,7 +135,9 @@ func (s Text) Draw(tx *PrintTx) int {
 			advance = textLen.Round() + x
 			adjustLog = fmt.Sprintf("adjusted face(%f,%f,%s,%.6s)=>%s\n", tx.CoordinationX(advance), s.MaxWidth, s.FontFace, s.Text, faceName)
 		}
-		log.Print(adjustLog)
+		if len(adjustLog) > 0 {
+			log.Print(adjustLog)
+		}
 	}
 	for advance > tx.Rgba.Bounds().Max.X-tx.RelationalX(tx.Margin) {
 		if len(s.Text) == 1 {
