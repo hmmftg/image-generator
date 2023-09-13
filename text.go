@@ -129,11 +129,13 @@ func (s Text) Draw(tx *PrintTx) int {
 	if s.MaxWidth > 0 {
 		fn, sz := s.FontData()
 		var adjustLog string
+		c := 0
 		for i := 0.0; tx.CoordinationX(advance) > s.MaxWidth; i += 0.02 {
 			faceName, d.Face = tx.AddFace(fn, sz-i)
 			textLen = d.MeasureString(s.Text)
 			advance = textLen.Round() + x
-			adjustLog = fmt.Sprintf("adjusted face(%f,%f,%s,%.6s)=>%s\n", tx.CoordinationX(advance), s.MaxWidth, s.FontFace, s.Text, faceName)
+			c++
+			adjustLog = fmt.Sprintf("adjusted face[%d|%f](%f,%f,%s,%.6s)=>%s\n", c, i, tx.CoordinationX(advance), s.MaxWidth, s.FontFace, s.Text, faceName)
 		}
 		if len(adjustLog) > 0 {
 			log.Print(adjustLog)
