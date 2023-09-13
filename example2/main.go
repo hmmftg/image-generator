@@ -80,7 +80,7 @@ func main() {
 				Y:          *text2Y,
 				RightAlign: true,
 				MaxWidth:   0.9,
-				FontFace:   faceName,
+				FontFace:   fmt.Sprintf("%s:%f", *fontfile, 17.85),
 			},
 			ig.Text{
 				Text:            text2,

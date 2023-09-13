@@ -44,11 +44,11 @@ func NumToWords(number string) string {
 	return result
 }
 
-func (tx *PrintTx) AddFace(fontName string, sz float64) font.Face {
+func (tx *PrintTx) AddFace(fontName string, sz float64) (string, font.Face) {
 	name := fmt.Sprintf("%s:%f:%f", fontName, sz, tx.Dpi)
 	face, ok := (*tx.Faces)[name]
 	if ok {
-		return face
+		return name, face
 	}
 	opts := opentype.FaceOptions{
 		Size:    sz,
@@ -61,20 +61,21 @@ func (tx *PrintTx) AddFace(fontName string, sz float64) font.Face {
 	face, _ = opentype.NewFace(&fn, &opts)
 	// fmt.Println("Adding font face:", name)
 	(*tx.Faces)[name] = face
-	return face
+	return name, face
 }
 
-func (s Text) CheckFace(tx *PrintTx) font.Face {
-	face, ok := (*tx.Faces)[s.Font(tx.Dpi)]
+func (s Text) CheckFace(tx *PrintTx) (string, font.Face) {
+	name := s.Font(tx.Dpi)
+	face, ok := (*tx.Faces)[name]
 	if !ok {
 		faceName := s.Font(tx.Dpi)
 		if len(faceName) == 0 {
 			log.Println("invalid font face(text ignored)", s.FontFace, tx.Dpi)
-			return nil
+			return "", nil
 		}
 		return tx.AddFace(s.FontData())
 	}
-	return face
+	return name, face
 }
 
 func (s Text) Font(dpi float64) string {
@@ -110,7 +111,7 @@ func (s Text) Draw(tx *PrintTx) int {
 		s.Text = NumToWords(s.Text)
 	}
 
-	face := s.CheckFace(tx)
+	faceName, face := s.CheckFace(tx)
 	if face == nil {
 		return 0
 	}
@@ -126,14 +127,29 @@ func (s Text) Draw(tx *PrintTx) int {
 	textLen := d.MeasureString(s.Text)
 	advance := textLen.Round() + x
 	if s.MaxWidth > 0 {
-		for i := 0.0; tx.CoordinationX(advance) > s.MaxWidth; i += 0.05 {
-			fn, sz := s.FontData()
-			d.Face = tx.AddFace(fn, sz-i)
+		fn, sz := s.FontData()
+		var adjustLog string
+		for i := 0.0; tx.CoordinationX(advance) > s.MaxWidth; i += 0.02 {
+			faceName, d.Face = tx.AddFace(fn, sz-i)
 			textLen = d.MeasureString(s.Text)
 			advance = textLen.Round() + x
+			adjustLog = fmt.Sprintf("adjusted face(%f,%f,%s,%.6s)=>%s\n", tx.CoordinationX(advance), s.MaxWidth, s.FontFace, s.Text, faceName)
 		}
+		log.Print(adjustLog)
 	}
 	for advance > tx.Rgba.Bounds().Max.X-tx.RelationalX(tx.Margin) {
+		if len(s.Text) == 1 {
+			log.Println(
+				"adjusting text for width failed",
+				s.Text,
+				d.Face.Metrics(),
+				advance,
+				tx.Rgba.Bounds().Max.X,
+				tx.RelationalX(tx.Margin),
+				tx.Margin,
+			)
+			return 0
+		}
 		if garabic.IsArabicLetter(firstRune) {
 			s.Text = s.Text[1:]
 		} else {
