@@ -14,9 +14,10 @@ import (
 )
 
 type Text struct {
-	Text                 string
-	X                    float64
-	Y                    float64
+	Text string
+	X    float64
+	Y    float64
+	// TODO:FixedWidth           int
 	MaxWidth             float64 // if result width is more than this value, library tries new font face with decreased size
 	RightAlign           bool
 	NumbersToArabic      bool
@@ -94,8 +95,33 @@ func (s Text) FontData() (string, float64) {
 	return fn[0], sz
 }
 
+func Justify(input string, length int) string {
+	var shapedSentence []string
+	if len(input) > length {
+		return input
+	}
+	neededLen := length - len(input)
+	sections := strings.Fields(input)
+	lengths := make([]int, len(sections))
+	wordCount := len(sections) - 1
+	for i := 0; i < wordCount; i++ {
+		lengths[i] = neededLen / wordCount
+		if i <= neededLen%wordCount {
+			lengths[i]++
+		}
+	}
+	for id, word := range sections {
+		shapedSentence = append(shapedSentence, word+strings.Repeat(" ", lengths[id]))
+	}
+
+	return strings.Join(shapedSentence, " ")
+}
+
 func (s Text) Draw(tx *PrintTx) int {
 	// log.Println("drawing", s)
+	if len(s.Text) == 0 {
+		return 0
+	}
 	firstRune := []rune(s.Text)[0]
 	if s.NumberToPersianWords {
 		s.Text = NumToPersianWords(s.Text)
@@ -111,7 +137,7 @@ func (s Text) Draw(tx *PrintTx) int {
 		s.Text = NumToWords(s.Text)
 	}
 
-	faceName, face := s.CheckFace(tx)
+	_, face := s.CheckFace(tx)
 	if face == nil {
 		return 0
 	}
@@ -128,7 +154,7 @@ func (s Text) Draw(tx *PrintTx) int {
 	advance := textLen.Round() + x
 	if s.MaxWidth > 0 {
 		fn, sz := s.FontData()
-		var adjustLog string
+		var adjustLog, faceName string
 		c := 0
 		for i := 0.0; tx.CoordinationX(advance) > s.MaxWidth; i += 0.02 {
 			faceName, d.Face = tx.AddFace(fn, sz-i)
