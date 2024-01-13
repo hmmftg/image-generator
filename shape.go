@@ -1,28 +1,29 @@
 package imagegenerator
 
 import (
-	"image"
 	"image/color"
+
+	"github.com/hmmftg/image/draw"
 
 	"github.com/StephaneBunel/bresenham"
 )
 
 // HLine draws a horizontal line
-func HLine(img *image.RGBA, col color.Color, x1, y, x2 int) {
+func HLine(img draw.Image, col color.Color, x1, y, x2 int) {
 	for ; x1 <= x2; x1++ {
 		img.Set(x1, y, col)
 	}
 }
 
 // VLine draws a veritcal line
-func VLine(img *image.RGBA, col color.Color, x, y1, y2 int) {
+func VLine(img draw.Image, col color.Color, x, y1, y2 int) {
 	for ; y1 <= y2; y1++ {
 		img.Set(x, y1, col)
 	}
 }
 
 // Rect draws a rectangle utilizing HLine() and VLine()
-func DrawRect(x1, y1, x2, y2, thickness int, img *image.RGBA, col color.Color) {
+func DrawRect(x1, y1, x2, y2, thickness int, img draw.Image, col color.Color) {
 	for i := 0; i < thickness; i++ {
 		HLine(img, col, x1, y1+i, x2)
 		HLine(img, col, x1, y2+i, x2+thickness-1)

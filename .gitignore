@@ -12,6 +12,7 @@ example*/*.bmp
 example*/*.png
 s*.png
 s*.bmp
+mg-card
 
 # Test binary, built with `go test -c`
 *.test

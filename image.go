@@ -3,7 +3,6 @@ package imagegenerator
 import (
 	"image"
 
-	//"image/draw"
 	"log"
 
 	"github.com/hmmftg/image/draw"
@@ -17,7 +16,7 @@ type Image struct {
 	RightAlign bool
 }
 
-func DrawImage(img *image.RGBA, target image.Image, x, y int) {
+func DrawImage(img draw.Image, target image.Image, x, y int) {
 	r := image.Rectangle{
 		Min: image.Point{X: x, Y: y},
 		Max: image.Point{X: x + target.Bounds().Dx(), Y: y + target.Bounds().Dy()}}
@@ -40,13 +39,13 @@ func (i Image) Draw(tx *PrintTx) int {
 		int(float64(i.Target.Bounds().Dx()*int(tx.Dpi/72.))*i.Scale),
 		int(float64(i.Target.Bounds().Dy()*int(tx.Dpi/72.))*i.Scale))
 	// log.Println("scaledRect", scaledRect, tx.Dpi/72., i.Scale, math.Ceil((tx.Dpi/72.)*i.Scale))
-	scaledImage := image.NewRGBA(scaledRect)
+	scaledImage := tx.getNewImage(scaledRect)
 
 	draw.NearestNeighbor.Scale(scaledImage, scaledRect, i.Target, i.Target.Bounds(), draw.Over, nil)
 
 	x := tx.RelationalX(i.X)
 	if i.RightAlign {
-		x = tx.Rgba.Bounds().Max.X - scaledImage.Rect.Max.X - x
+		x = tx.Rgba.Bounds().Max.X - scaledImage.Bounds().Max.X - x
 	} else {
 		x = tx.RelationalX(i.X)
 	}

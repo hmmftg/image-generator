@@ -5,13 +5,13 @@ import (
 	"flag"
 	"fmt"
 	"image"
-	"image/draw"
 	"image/png"
 	"log"
 	"os"
 
 	ig "github.com/hmmftg/image-generator"
 
+	"github.com/hmmftg/image/draw"
 	"github.com/hmmftg/image/font"
 	"github.com/hmmftg/image/font/opentype"
 )

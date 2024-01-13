@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"image/color"
 	"log"
 
 	ig "github.com/hmmftg/image-generator"
@@ -195,6 +196,25 @@ func main() {
 				FileFormat: ig.Bmp,
 				File:       "s3.bmp",
 				NeedB64:    false,
+			},
+			{
+				Dpi:        *dpi3,
+				Height:     *imageY,
+				Width:      *imageX,
+				FileFormat: ig.Bmp,
+				File:       "s4-1.bmp",
+				NeedB64:    false,
+				MonoChrome: false,
+			},
+			{
+				Dpi:             *dpi3,
+				Height:          *imageY,
+				Width:           *imageX,
+				FileFormat:      ig.Bmp,
+				File:            "s4-2.bmp",
+				NeedB64:         false,
+				MonoChrome:      true,
+				MonoChromeColor: color.Black,
 			},
 		},
 	}
