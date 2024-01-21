@@ -79,7 +79,12 @@ func ProcessRequest(
 
 		switch name {
 		case BmpAndPng:
-			fullResp[Bmp] = resp[Bmp]
+			mn, ok := resp[BmpMonoChrome]
+			if ok {
+				fullResp[Bmp] = mn
+			} else {
+				fullResp[Bmp] = resp[Bmp]
+			}
 			fullResp[Png] = resp[Png]
 		default:
 			fullResp[name] = resp[Png]
