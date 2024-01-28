@@ -6,8 +6,8 @@ github.com/cpuguy83/go-md2man/v2 v2.0.0/go.mod h1:maD7wRr/U5Z6m/iR4s+kqSMx2CaBsr
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/gorilla/mux v1.8.0/go.mod h1:DVbg23sWSpFRCP0SfiEN6jmj59UnW/n46BH5rLB71So=
-github.com/hmmftg/garabic v1.16.11 h1:fZKX3WcDC80I3RX/FbcuzSG1OKY92kCNRLZSI9xqxSo=
-github.com/hmmftg/garabic v1.16.11/go.mod h1:S2no7yA5LcaXeKGX7bYa307VhlcqT2EhtgqwncSCFJo=
+github.com/hmmftg/garabic v1.16.12 h1:aCIVM6SlrIH6sfv5xp9iqq5L50yRlhcDKymYHbALa6w=
+github.com/hmmftg/garabic v1.16.12/go.mod h1:S2no7yA5LcaXeKGX7bYa307VhlcqT2EhtgqwncSCFJo=
 github.com/hmmftg/image v0.12.1 h1:YuMDD46LDzTqd4nGr8qFjGPJS8UBAJ5O73QrrB920Z0=
 github.com/hmmftg/image v0.12.1/go.mod h1:Srwt/KgBNUwX7drC4nVbFGJ/BJHy8k4JG4GL5cBuBac=
 github.com/pkg/diff v0.0.0-20200914180035-5b29258ca4f7/go.mod h1:zO8QMzTeZd5cpnIkz/Gn6iK0jDfGicM1nynOkkPIl28=
